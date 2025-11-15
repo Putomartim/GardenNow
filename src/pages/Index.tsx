@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { format, isWithinInterval, parse } from "date-fns";
 
+import RotatingText from "./RotatingText";
 import {
   baseMediaUrl,
   contactEmail,
@@ -17,6 +18,78 @@ import { useLanguagePreference } from "@/hooks/use-language-preference";
 
 const contactEmailEncoded = encodeURIComponent(contactEmail);
 
+const rotatingPrefixes: Record<LanguageKey, string> = {
+  pt: "Descobre",
+  en: "Discover",
+  es: "Descubre",
+  fr: "Découvre",
+};
+
+const rotatingTexts: Record<LanguageKey, string[]> = {
+  pt: ["o Desafio", "a Emoção", "os Limites", "o Parque"],
+  en: ["the Challenge", "the Thrill", "your Limits", "the Park"],
+  es: ["el Desafío", "la Emoción", "tus Límites", "el Parque"],
+  fr: ["le Défi", "l'Émotion", "tes Limites", "le Parc"],
+};
+
+const circuitsContent: Record<LanguageKey, { id: string; label: string; color: string; textColor: string }[]> = {
+  pt: [
+    { id: "circuito-laranja", label: "Laranja", color: "#f7941d", textColor: "#1c1405" },
+    { id: "circuito-amarelo", label: "Amarelo", color: "#ffd400", textColor: "#1c1405" },
+    { id: "circuito-verde", label: "Verde", color: "#8dc63f", textColor: "#0f1609" },
+    { id: "circuito-azul", label: "Azul", color: "#1b75bb", textColor: "#f9fbfe" },
+    { id: "circuito-vermelho", label: "Vermelho", color: "#ed1c24", textColor: "#fff5f5" },
+  ],
+  en: [
+    { id: "circuito-laranja", label: "Orange", color: "#f7941d", textColor: "#1c1405" },
+    { id: "circuito-amarelo", label: "Yellow", color: "#ffd400", textColor: "#1c1405" },
+    { id: "circuito-verde", label: "Green", color: "#8dc63f", textColor: "#0f1609" },
+    { id: "circuito-azul", label: "Blue", color: "#1b75bb", textColor: "#f9fbfe" },
+    { id: "circuito-vermelho", label: "Red", color: "#ed1c24", textColor: "#fff5f5" },
+  ],
+  es: [
+    { id: "circuito-laranja", label: "Naranja", color: "#f7941d", textColor: "#1c1405" },
+    { id: "circuito-amarelo", label: "Amarillo", color: "#ffd400", textColor: "#1c1405" },
+    { id: "circuito-verde", label: "Verde", color: "#8dc63f", textColor: "#0f1609" },
+    { id: "circuito-azul", label: "Azul", color: "#1b75bb", textColor: "#f9fbfe" },
+    { id: "circuito-vermelho", label: "Rojo", color: "#ed1c24", textColor: "#fff5f5" },
+  ],
+  fr: [
+    { id: "circuito-laranja", label: "Orange", color: "#f7941d", textColor: "#1c1405" },
+    { id: "circuito-amarelo", label: "Jaune", color: "#ffd400", textColor: "#1c1405" },
+    { id: "circuito-verde", label: "Vert", color: "#8dc63f", textColor: "#0f1609" },
+    { id: "circuito-azul", label: "Bleu", color: "#1b75bb", textColor: "#f9fbfe" },
+    { id: "circuito-vermelho", label: "Rouge", color: "#ed1c24", textColor: "#fff5f5" },
+  ],
+};
+
+const circuitSectionCopy: Record<LanguageKey, { badge: string; title: string; description: string }> = {
+  pt: {
+    badge: "Circuitos",
+    title: "Escolhe o teu percurso",
+    description:
+      "Cinco níveis de aventura progressiva que te guiam dos primeiros passos na rede até aos grandes desafios no topo das árvores.",
+  },
+  en: {
+    badge: "Circuits",
+    title: "Pick your route",
+    description:
+      "Five progressive levels lead you from the first steps on the net to the biggest challenges high among the trees.",
+  },
+  es: {
+    badge: "Circuitos",
+    title: "Elige tu recorrido",
+    description:
+      "Cinco niveles progresivos te llevan de los primeros pasos en la red a los grandes retos entre los árboles.",
+  },
+  fr: {
+    badge: "Circuits",
+    title: "Choisis ton parcours",
+    description:
+      "Cinq niveaux progressifs t'emmènent des premiers pas sur le filet aux grands défis dans les arbres.",
+  },
+};
+
 const createMailtoLink = (subject: string, body?: string) => {
   const params = new URLSearchParams();
   params.set("subject", subject);
@@ -31,10 +104,10 @@ const translations: Record<LanguageKey, LanguageContent> = {
     localeLabel: "Português",
     mailSubject: "Reserva FunPark São João",
     navLinks: [
-      { label: "Sobre o Parque", href: "#sobre" },
+      { label: "Parque", href: "#sobre" },
       { label: "Atividades", href: "#atividades" },
-      { label: "Como Funciona", href: "#experiencia" },
-      { label: "Reservas", href: "#reservas" },
+      { label: "Funcionamento", href: "#horarios" },
+      { label: "Circuitos", href: "#circuitos" },
     ],
     navSubtopics: {
       "#sobre": [
@@ -486,10 +559,10 @@ const translations: Record<LanguageKey, LanguageContent> = {
     localeLabel: "English",
     mailSubject: "FunPark booking request",
     navLinks: [
-      { label: "About the Park", href: "#sobre" },
+      { label: "Park", href: "#sobre" },
       { label: "Activities", href: "#atividades" },
-      { label: "How it Works", href: "#experiencia" },
-      { label: "Bookings", href: "#reservas" },
+      { label: "Hours", href: "#horarios" },
+      { label: "Circuits", href: "#circuitos" },
     ],
     navSubtopics: {
       "#sobre": [
@@ -790,7 +863,7 @@ const translations: Record<LanguageKey, LanguageContent> = {
         },
         {
           label: "Public transport",
-          description: "Buses 161/153 from Lisbon (Praça de Espanha) stop in São João da Caparica, a 5-minute walk away.",
+          description: "Buses 161/153 from Lisbon (Praça de Espanha) stop in São João da Caparica, a 5 minutes a walk away.",
         },
         {
           label: "GPS coordinates",
@@ -957,10 +1030,10 @@ const translations: Record<LanguageKey, LanguageContent> = {
     localeLabel: "Español",
     mailSubject: "Solicitud de reserva FunPark",
     navLinks: [
-      { label: "Sobre el parque", href: "#sobre" },
+      { label: "Parque", href: "#sobre" },
       { label: "Actividades", href: "#atividades" },
-      { label: "Cómo funciona", href: "#experiencia" },
-      { label: "Reservas", href: "#reservas" },
+      { label: "Funcionamiento", href: "#horarios" },
+      { label: "Circuitos", href: "#circuitos" },
     ],
     navSubtopics: {
       "#sobre": [
@@ -1435,7 +1508,6 @@ const translations: Record<LanguageKey, LanguageContent> = {
       { label: "Comment ça marche", href: "#experiencia" },
       { label: "Horaires", href: "#horaires" },
       { label: "Galerie", href: "#galerie" },
-      { label: "Réservations", href: "#reservations" },
     ],
     navSubtopics: {
       "#sobre": [
@@ -1936,6 +2008,8 @@ const Index = () => {
   const content = translations[language];
   const navLinks = content.navLinks;
   const activityDetails = activityPagesContent[language];
+  const circuits = circuitsContent[language];
+  const circuitsCopy = circuitSectionCopy[language];
   const activityNavItems = activityDetails.map((activityDetail) => {
     const matchingHomeActivity = content.activities.find(
       (activity) => activity.slug === activityDetail.slug
@@ -1952,8 +2026,25 @@ const Index = () => {
           "#atividades": activityNavItems,
         }
       : {}),
+    ...(circuits.length > 0
+      ? {
+          "#circuitos": circuits.map((circuit) => ({
+            label: circuit.label,
+            href: `#${circuit.id}`,
+            color: circuit.color,
+            textColor: circuit.textColor,
+          })),
+        }
+      : {}),
   };
   const hero = content.hero;
+  const featuredMoment = hero.moments?.[0] ?? null;
+  const statusTexts: Record<LanguageKey, { open: string; closed: string }> = {
+    pt: { open: "Parque Aberto", closed: "Parque Fechado" },
+    en: { open: "Park Open", closed: "Park Closed" },
+    es: { open: "Parque abierto", closed: "Parque cerrado" },
+    fr: { open: "Parc ouvert", closed: "Parc fermé" },
+  };
   const experience = content.experience;
   const gallery = content.gallery;
   const schedule = content.schedule;
@@ -2069,6 +2160,10 @@ const Index = () => {
       end: endDate,
     });
   })();
+  const statusLabel = statusTexts[language][isOpen ? "open" : "closed"];
+  const statusClasses = isOpen
+    ? "bg-[#2f7a3d] text-white shadow-[0_12px_30px_-16px_rgba(47,122,61,0.9)]"
+    : "bg-[#a32929] text-white shadow-[0_12px_30px_-16px_rgba(163,41,41,0.85)]";
 
   return (
     <div id="top" className="min-h-screen bg-background text-foreground">
@@ -2087,8 +2182,8 @@ const Index = () => {
                 className="h-12 w-auto drop-shadow-lg"
                 loading="lazy"
               />
-              <span className="hidden font-semibold text-white sm:inline">
-                FunPark São João
+              <span className="hidden font-semibold uppercase tracking-[0.35em] text-white sm:inline">
+                FunParque S. João
               </span>
             </a>
             <div
@@ -2097,12 +2192,11 @@ const Index = () => {
             >
               {navLinks.map((item) => {
                 const subtopics = navSubtopics[item.href] ?? [];
+                const baseClasses =
+                  "inline-flex items-center justify-center gap-2 rounded-full bg-[rgba(73,49,24,0.95)] px-5 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-white shadow-[0_6px_12px_-8px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5 hover:bg-[rgba(73,49,24,0.9)]";
                 if (subtopics.length > 0) {
                   return (
-                    <div
-                      key={item.label}
-                      className="relative"
-                    >
+                    <div key={item.label} className="relative">
                       <button
                         type="button"
                         onClick={() =>
@@ -2110,7 +2204,11 @@ const Index = () => {
                             current === item.href ? null : item.href
                           )
                         }
-                        className="flex items-center gap-2 rounded-full bg-[rgba(73,49,24,0.95)] px-5 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-center text-white shadow-[0_6px_12px_-8px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5 hover:bg-[rgba(73,49,24,0.9)]"
+                        className={`${baseClasses} ${
+                          openNav === item.href
+                            ? "bg-[rgba(73,49,24,1)]"
+                            : ""
+                        }`}
                         aria-expanded={openNav === item.href}
                       >
                         {item.label}
@@ -2121,53 +2219,60 @@ const Index = () => {
                       {openNav === item.href && (
                         <div className="absolute left-0 top-[calc(100%+0.75rem)] z-50 min-w-[220px] rounded-2xl border border-primary/30 bg-secondary/95 p-3 text-left shadow-[0_15px_40px_-20px_rgba(0,0,0,0.6)]">
                           <ul className="space-y-1 text-sm">
-                            {subtopics.map((sub) => (
-                              <li key={sub.href}>
-                                {sub.href.startsWith("#") ? (
-                                  <a
-                                    href={sub.href}
-                                    className="block rounded-xl px-4 py-2 text-secondary-foreground transition hover:bg-primary hover:text-primary-foreground"
-                                    onClick={() => setOpenNav(null)}
-                                  >
-                                    {sub.label}
-                                  </a>
-                                ) : (
-                                  <Link
-                                    to={sub.href}
-                                    className="block rounded-xl px-4 py-2 text-secondary-foreground transition hover:bg-primary hover:text-primary-foreground"
-                                    onClick={() => setOpenNav(null)}
-                                  >
-                                    {sub.label}
-                                  </Link>
-                                )}
-                              </li>
-                            ))}
+                            {subtopics.map((sub) => {
+                              const subColor = (sub as { color?: string }).color;
+                              const subTextColor = (sub as { textColor?: string }).textColor;
+                              const coloredClasses =
+                                "block rounded-full px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.3em] shadow-[0_12px_30px_-18px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5";
+                              const defaultClasses =
+                                "block rounded-xl px-4 py-2 text-secondary-foreground transition hover:bg-primary hover:text-primary-foreground";
+                              const commonProps = {
+                                className: subColor ? coloredClasses : defaultClasses,
+                                style: subColor ? { backgroundColor: subColor, color: subTextColor ?? "#fff" } : undefined,
+                                onClick: () => setOpenNav(null),
+                              } as const;
+
+                              return (
+                                <li key={sub.href}>
+                                  {sub.href.startsWith("#") ? (
+                                    <a href={sub.href} {...commonProps}>
+                                      {sub.label}
+                                    </a>
+                                  ) : (
+                                    <Link to={sub.href} {...commonProps}>
+                                      {sub.label}
+                                    </Link>
+                                  )}
+                                </li>
+                              );
+                            })}
                           </ul>
                         </div>
                       )}
                     </div>
                   );
                 }
-                const isAnchor = item.href.startsWith("#");
-                if (isAnchor) {
+
+                if (item.href.startsWith("#")) {
                   return (
-              <a
-                key={item.label}
-                href={item.href}
-                      className="rounded-full bg-[rgba(73,49,24,0.95)] px-5 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-center text-white shadow-[0_6px_12px_-8px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5 hover:bg-[rgba(73,49,24,0.9)]"
-              >
-                {item.label}
-              </a>
+                    <a key={item.label} href={item.href} className={baseClasses}>
+                      {item.label}
+                    </a>
                   );
                 }
+
+                if (item.href.startsWith("/")) {
+                  return (
+                    <Link key={item.label} to={item.href} className={baseClasses}>
+                      {item.label}
+                    </Link>
+                  );
+                }
+
                 return (
-                  <Link
-                    key={item.label}
-                    to={item.href}
-                    className="rounded-full bg-[rgba(73,49,24,0.95)] px-5 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-center text-white shadow-[0_6px_12px_-8px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5 hover:bg-[rgba(73,49,24,0.9)]"
-                  >
+                  <a key={item.label} href={item.href} className={baseClasses}>
                     {item.label}
-                  </Link>
+                  </a>
                 );
               })}
               <div className="relative">
@@ -2176,7 +2281,7 @@ const Index = () => {
                   onClick={() =>
                     setLanguageMenuOpen((current) => !current)
                   }
-                  className="flex items-center gap-2 rounded-full bg-[rgba(73,49,24,0.95)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white shadow-[0_6px_12px_-8px_rgba(0,0,0,0.6)]"
+                  className="flex items-center gap-2 rounded-full bg-[rgba(73,49,24,0.95)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white shadow-[0_6px_12px_-8px_rgba(0,0,0,0.6)]"
                   aria-expanded={languageMenuOpen}
                 >
                   <img
@@ -2185,15 +2290,14 @@ const Index = () => {
                     className="h-4 w-6 rounded-[2px] object-cover"
                     loading="lazy"
                   />
-                  <span>{translations[language].localeLabel}</span>
                   <span className="text-[0.45rem]">
                     {languageMenuOpen ? "▲" : "▼"}
                   </span>
                 </button>
                 {languageMenuOpen && (
-                  <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-48 rounded-2xl border border-primary/30 bg-secondary/95 p-2 text-left shadow-[0_15px_40px_-20px_rgba(0,0,0,0.6)]">
+                  <div className="absolute right-0 top-[calc(100%+0.75rem)] z-50 w-36 rounded-2xl border border-primary/30 bg-secondary/95 p-2 text-left shadow-[0_15px_40px_-20px_rgba(0,0,0,0.6)]">
                     <ul className="space-y-1 text-sm">
-                      {Object.entries(translations).map(([key, value]) => (
+                      {Object.keys(translations).map((key) => (
                         <li key={key}>
                           <button
                             type="button"
@@ -2201,15 +2305,14 @@ const Index = () => {
                               setLanguage(key as LanguageKey);
                               setLanguageMenuOpen(false);
                             }}
-                            className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-secondary-foreground transition hover:bg-primary hover:text-primary-foreground"
+                            className="flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2 text-left text-secondary-foreground transition hover:bg-primary hover:text-primary-foreground"
                           >
                             <img
                               src={getFlagSrc(key as LanguageKey)}
-                              alt={value.localeLabel}
+                              alt={translations[key as LanguageKey].localeLabel}
                               className="h-4 w-6 rounded-[2px] object-cover"
                               loading="lazy"
                             />
-                            <span>{value.localeLabel}</span>
                           </button>
                         </li>
                       ))}
@@ -2217,14 +2320,20 @@ const Index = () => {
                   </div>
                 )}
               </div>
-          </div>
-          <a
-              href={contactMailto}
+            </div>
+            <a
+              href="#reservas"
+              onClick={(event) => {
+                event.preventDefault();
+                document
+                  .querySelector("#reservas")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
               className="flex h-12 min-w-[150px] items-center justify-center rounded-full bg-[linear-gradient(180deg,#d39b4c,#b3732a)] px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.3em] text-white shadow-[0_10px_20px_-12px_rgba(0,0,0,0.6)] transition hover:-translate-y-0.5 hover:bg-[linear-gradient(180deg,#e2a758,#c87c2d)]"
             >
               {hero.ctas.primary}
-          </a>
-        </nav>
+            </a>
+          </nav>
 
           <div className="mt-6 flex w-full justify-end lg:hidden">
             <div className="relative">
@@ -2233,7 +2342,7 @@ const Index = () => {
                 onClick={() =>
                   setLanguageMenuOpen((current) => !current)
                 }
-                className="flex items-center gap-2 rounded-full bg-[rgba(73,49,24,0.95)] px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white shadow-[0_6px_12px_-8px_rgba(0,0,0,0.6)]"
+                className="flex items-center gap-2 rounded-full bg-[rgba(73,49,24,0.95)] px-3 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white shadow-[0_6px_12px_-8px_rgba(0,0,0,0.6)]"
                 aria-expanded={languageMenuOpen}
               >
                 <img
@@ -2242,15 +2351,14 @@ const Index = () => {
                   className="h-4 w-6 rounded-[2px] object-cover"
                   loading="lazy"
                 />
-                <span>{translations[language].localeLabel}</span>
                 <span className="text-[0.45rem]">
                   {languageMenuOpen ? "▲" : "▼"}
                 </span>
               </button>
               {languageMenuOpen && (
-                <div className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-48 rounded-2xl border border-primary/30 bg-secondary/95 p-2 text-left shadow-[0_15px_40px_-20px_rgba(0,0,0,0.6)]">
+                <div className="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-36 rounded-2xl border border-primary/30 bg-secondary/95 p-2 text-left shadow-[0_15px_40px_-20px_rgba(0,0,0,0.6)]">
                   <ul className="space-y-1 text-sm">
-                    {Object.entries(translations).map(([key, value]) => (
+                    {Object.keys(translations).map((key) => (
                       <li key={key}>
                         <button
                           type="button"
@@ -2258,15 +2366,14 @@ const Index = () => {
                             setLanguage(key as LanguageKey);
                             setLanguageMenuOpen(false);
                           }}
-                          className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-secondary-foreground transition hover:bg-primary hover:text-primary-foreground"
+                          className="flex w-full items-center justify-center gap-2 rounded-xl px-3 py-2 text-left text-secondary-foreground transition hover:bg-primary hover:text-primary-foreground"
                         >
                           <img
                             src={getFlagSrc(key as LanguageKey)}
-                            alt={value.localeLabel}
+                            alt={translations[key as LanguageKey].localeLabel}
                             className="h-4 w-6 rounded-[2px] object-cover"
                             loading="lazy"
                           />
-                          <span>{value.localeLabel}</span>
                         </button>
                       </li>
                     ))}
@@ -2276,137 +2383,135 @@ const Index = () => {
             </div>
           </div>
 
-          <div className="mt-14 grid gap-12 text-white md:mt-20 md:grid-cols-[1.35fr_1fr] md:items-start">
-            <div className="space-y-10">
-              <div
-                className={`inline-flex rounded-full px-5 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.35em] ${isOpen ? "bg-[rgba(65,136,35,0.9)] text-white" : "bg-[rgba(120,44,32,0.9)] text-white"}`}
-              >
-                {isOpen ?
-                  (language === "pt" ? "Parque Aberto" : language === "es" ? "Parque abierto" : language === "fr" ? "Parc ouvert" : "Park open")
-                  : (language === "pt" ? "Parque Encerrado" : language === "es" ? "Parque cerrado" : language === "fr" ? "Parc fermé" : "Park closed")}
+          <div className="mt-14 flex flex-1 flex-col items-center gap-6 text-white md:mt-20">
+            {featuredMoment ? (
+              <div className="relative w-full max-w-3xl overflow-hidden rounded-[2.75rem] border border-border shadow-[0_45px_140px_-90px_rgba(0,0,0,0.65)]">
+                <img
+                  src={featuredMoment.image}
+                  alt={featuredMoment.title}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/45 px-6 text-center">
+                  <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+                    <span className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+                      {rotatingPrefixes[language]}
+                    </span>
+                    <RotatingText
+                      texts={rotatingTexts[language]}
+                      mainClassName="px-2 sm:px-2 md:px-3 text-black normal-case tracking-normal text-3xl font-bold overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg sm:text-4xl md:text-5xl"
+                      style={{ backgroundColor: "#8DC13A" }}
+                      staggerFrom="last"
+                      initial={{ y: "100%" }}
+                      animate={{ y: 0 }}
+                      exit={{ y: "-120%" }}
+                      staggerDuration={0.025}
+                      splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                      transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                      rotationInterval={2000}
+                    />
+                  </div>
+                </div>
               </div>
-          <div className="space-y-8">
-                <p className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.45em]">
-                  {hero.badge}
-            </p>
-                <h1 className="text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
-                  {hero.title}
-            </h1>
-                <p className="max-w-xl text-sm text-white/80 sm:text-base">
-                  {hero.subtitle}
-                </p>
-                <div className="flex flex-wrap gap-3 text-[0.7rem] uppercase tracking-[0.3em]">
-                  {hero.chips.map((chip) => (
-                    <span key={chip} className="rounded-full bg-white/10 px-4 py-2">
-                      {chip}
-              </span>
-                  ))}
-            </div>
-                <div className="flex flex-wrap gap-4 text-sm font-semibold">
-              <a
-                href={contactMailto}
-                    className="rounded-full bg-white px-6 py-3 text-primary transition hover:bg-secondary hover:text-secondary-foreground"
+            ) : (
+              <div className="flex h-72 w-full max-w-3xl items-center justify-center rounded-[2.75rem] border border-border bg-black/30 px-6 text-center">
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+                  <span className="text-3xl font-bold text-white sm:text-4xl md:text-5xl">
+                    {rotatingPrefixes[language]}
+                  </span>
+                  <RotatingText
+                    texts={rotatingTexts[language]}
+                    mainClassName="px-2 sm:px-2 md:px-3 text-black normal-case tracking-normal text-3xl font-bold overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg sm:text-4xl md:text-5xl"
+                    style={{ backgroundColor: "#8DC13A" }}
+                    staggerFrom="last"
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "-120%" }}
+                    staggerDuration={0.025}
+                    splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                    transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                    rotationInterval={2000}
+                  />
+                </div>
+              </div>
+            )}
+            <div className="mt-4">
+              <span
+                className={`inline-flex items-center justify-center rounded-full px-6 py-2 text-[0.65rem] font-semibold uppercase tracking-[0.45em] ${statusClasses}`}
               >
-                    {hero.ctas.primary}
-              </a>
-              <a
-                    href={heroWhatsappLink}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="rounded-full border border-white/60 px-6 py-3 text-white transition hover:border-white hover:bg-white/10"
-                  >
-                    {hero.ctas.secondary}
-                  </a>
-                  <a
-                    href="#atividades"
-                    className="rounded-full border border-white/60 px-6 py-3 text-white transition hover:border-white hover:bg-white/10"
-                  >
-                    {hero.ctas.tertiary}
-                  </a>
+                {statusLabel}
+              </span>
             </div>
           </div>
 
-              <div className="rounded-3xl border border-primary/30 bg-secondary/40 p-6 text-sm text-secondary-foreground shadow-[0_25px_60px_-50px_rgba(45,30,15,0.4)]">
-                <p className="text-[0.65rem] uppercase tracking-[0.45em] text-primary/80">
-                  {hero.phases.badge}
-                </p>
-                <h2 className="mt-3 text-2xl font-semibold text-primary-foreground">
-                  {hero.phases.heading}
-                </h2>
-                <ul className="mt-4 space-y-4 text-sm">
-                  {hero.phases.steps.map((step) => (
-                    <li key={step.number} className="space-y-1">
-                      <span className="text-[0.65rem] font-semibold uppercase tracking-[0.35em] text-primary">
-                        {step.number}
-                      </span>
-                      <h3 className="text-base font-semibold text-primary-foreground">
-                        {step.title}
-                      </h3>
-                      <p className="text-secondary-foreground/80">{step.description}</p>
-                    </li>
-                  ))}
-                </ul>
-            </div>
-            </div>
-
-            <aside className="flex flex-col gap-5">
-              {hero.moments.map((moment) => (
-                <article
-                  key={moment.title}
-                  className="group overflow-hidden rounded-3xl border border-primary/30 bg-secondary/60 p-4 text-secondary-foreground shadow-[0_20px_50px_-45px_rgba(0,0,0,0.6)]"
-                >
-                  <div className="relative h-48 overflow-hidden rounded-2xl">
-                    <img
-                      src={moment.image}
-                      alt={moment.title}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                loading="lazy"
-              />
-            </div>
-                  <div className="mt-4 space-y-2">
-                    <h3 className="text-lg font-semibold text-primary">{moment.title}</h3>
-                    <p className="text-sm text-secondary-foreground/80">{moment.description}</p>
-          </div>
-                </article>
-              ))}
-            </aside>
         </div>
-      </div>
-    </header>
+      </header>
 
       <main className="mx-auto max-w-6xl space-y-20 px-6 py-16 text-[#f8f1df] sm:px-10 lg:space-y-24 lg:py-24">
-      <section
+        <section
+          id="circuitos"
+          className="rounded-[3rem] border border-border bg-card p-10 shadow-[0_35px_100px_-70px_rgba(45,30,15,0.5)] lg:p-14"
+        >
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="max-w-xl space-y-4">
+              <p className="text-xs uppercase tracking-[0.45em] text-primary">
+                {circuitsCopy.badge}
+              </p>
+              <h2 className="text-3xl font-semibold sm:text-4xl">
+                {circuitsCopy.title}
+              </h2>
+              <p className="text-sm text-muted-foreground sm:text-base">
+                {circuitsCopy.description}
+              </p>
+            </div>
+          </div>
+          <div className="relative mt-10 flex flex-col items-center gap-4">
+            <div className="absolute left-1/2 top-0 bottom-0 w-[6px] -translate-x-1/2 rounded-full bg-gradient-to-b from-[#5b451f] via-[#7b5a2c] to-[#5b451f]" aria-hidden />
+            {circuits.map((circuit) => (
+              <div key={circuit.id} id={circuit.id} className="relative z-10 w-full max-w-xs">
+                <div
+                  className="rounded-full py-3 text-center text-sm font-semibold uppercase tracking-[0.45em] shadow-[0_25px_45px_-25px_rgba(0,0,0,0.45)]"
+                  style={{ backgroundColor: circuit.color, color: circuit.textColor }}
+                >
+                  {circuit.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section
           id="experiencia"
           className="rounded-[3rem] border border-border bg-card p-10 shadow-[0_40px_100px_-70px_rgba(45,30,15,0.5)] lg:p-14"
-      >
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div>
-              <p className="text-xs uppercase tracking-[0.45em] text-primary">
-                {experience.badge}
+        >
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div>
+                <p className="text-xs uppercase tracking-[0.45em] text-primary">
+                  {experience.badge}
+              </p>
+                <h2 className="mt-2 text-3xl font-semibold sm:text-4xl">
+                  {experience.title}
+              </h2>
+            </div>
+              <p className="max-w-xl text-sm text-muted-foreground">
+                {experience.description}
             </p>
-              <h2 className="mt-2 text-3xl font-semibold sm:text-4xl">
-                {experience.title}
-            </h2>
           </div>
-            <p className="max-w-xl text-sm text-muted-foreground">
-              {experience.description}
-          </p>
-        </div>
-        <div className="mt-10 grid gap-6 md:grid-cols-4">
-            {experience.steps.map((step) => (
-            <article
-              key={step.number}
-                className="flex flex-col gap-4 rounded-3xl border border-primary/30 bg-muted p-6 text-sm text-muted-foreground"
-            >
-                <span className="text-[0.65rem] font-semibold uppercase tracking-[0.45em] text-primary">
-                  {step.number}
-                </span>
-                <h3 className="text-lg font-semibold">{step.title}</h3>
-                <p className="text-sm text-muted-foreground">{step.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+          <div className="mt-10 grid gap-6 md:grid-cols-4">
+              {experience.steps.map((step) => (
+              <article
+                key={step.number}
+                  className="flex flex-col gap-4 rounded-3xl border border-primary/30 bg-muted p-6 text-sm text-muted-foreground"
+              >
+                  <span className="text-[0.65rem] font-semibold uppercase tracking-[0.45em] text-primary">
+                    {step.number}
+                  </span>
+                  <h3 className="text-lg font-semibold">{step.title}</h3>
+                  <p className="text-sm text-muted-foreground">{step.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
 
         <section id="galeria" className="space-y-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
