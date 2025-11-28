@@ -32,34 +32,37 @@ const rotatingTexts: Record<LanguageKey, string[]> = {
   fr: ["le Défi", "l'Émotion", "tes Limites", "le Parc"],
 };
 
-const circuitsContent: Record<LanguageKey, { id: string; label: string; color: string; textColor: string }[]> = {
+const circuitsContent: Record<
+  LanguageKey,
+  { id: string; slug: string; label: string; color: string; textColor: string }[]
+> = {
   pt: [
-    { id: "circuito-laranja", label: "Laranja", color: "#f7941d", textColor: "#1c1405" },
-    { id: "circuito-amarelo", label: "Amarelo", color: "#ffd400", textColor: "#1c1405" },
-    { id: "circuito-verde", label: "Verde", color: "#8dc63f", textColor: "#0f1609" },
-    { id: "circuito-azul", label: "Azul", color: "#1b75bb", textColor: "#f9fbfe" },
-    { id: "circuito-vermelho", label: "Vermelho", color: "#ed1c24", textColor: "#fff5f5" },
+    { id: "circuito-laranja", slug: "laranja", label: "Laranja", color: "#f7941d", textColor: "#1c1405" },
+    { id: "circuito-amarelo", slug: "amarelo", label: "Amarelo", color: "#ffd400", textColor: "#1c1405" },
+    { id: "circuito-verde", slug: "verde", label: "Verde", color: "#8dc63f", textColor: "#0f1609" },
+    { id: "circuito-azul", slug: "azul", label: "Azul", color: "#1b75bb", textColor: "#f9fbfe" },
+    { id: "circuito-vermelho", slug: "vermelho", label: "Vermelho", color: "#ed1c24", textColor: "#fff5f5" },
   ],
   en: [
-    { id: "circuito-laranja", label: "Orange", color: "#f7941d", textColor: "#1c1405" },
-    { id: "circuito-amarelo", label: "Yellow", color: "#ffd400", textColor: "#1c1405" },
-    { id: "circuito-verde", label: "Green", color: "#8dc63f", textColor: "#0f1609" },
-    { id: "circuito-azul", label: "Blue", color: "#1b75bb", textColor: "#f9fbfe" },
-    { id: "circuito-vermelho", label: "Red", color: "#ed1c24", textColor: "#fff5f5" },
+    { id: "circuito-laranja", slug: "laranja", label: "Orange", color: "#f7941d", textColor: "#1c1405" },
+    { id: "circuito-amarelo", slug: "amarelo", label: "Yellow", color: "#ffd400", textColor: "#1c1405" },
+    { id: "circuito-verde", slug: "verde", label: "Green", color: "#8dc63f", textColor: "#0f1609" },
+    { id: "circuito-azul", slug: "azul", label: "Blue", color: "#1b75bb", textColor: "#f9fbfe" },
+    { id: "circuito-vermelho", slug: "vermelho", label: "Red", color: "#ed1c24", textColor: "#fff5f5" },
   ],
   es: [
-    { id: "circuito-laranja", label: "Naranja", color: "#f7941d", textColor: "#1c1405" },
-    { id: "circuito-amarelo", label: "Amarillo", color: "#ffd400", textColor: "#1c1405" },
-    { id: "circuito-verde", label: "Verde", color: "#8dc63f", textColor: "#0f1609" },
-    { id: "circuito-azul", label: "Azul", color: "#1b75bb", textColor: "#f9fbfe" },
-    { id: "circuito-vermelho", label: "Rojo", color: "#ed1c24", textColor: "#fff5f5" },
+    { id: "circuito-laranja", slug: "laranja", label: "Naranja", color: "#f7941d", textColor: "#1c1405" },
+    { id: "circuito-amarelo", slug: "amarelo", label: "Amarillo", color: "#ffd400", textColor: "#1c1405" },
+    { id: "circuito-verde", slug: "verde", label: "Verde", color: "#8dc63f", textColor: "#0f1609" },
+    { id: "circuito-azul", slug: "azul", label: "Azul", color: "#1b75bb", textColor: "#f9fbfe" },
+    { id: "circuito-vermelho", slug: "vermelho", label: "Rojo", color: "#ed1c24", textColor: "#fff5f5" },
   ],
   fr: [
-    { id: "circuito-laranja", label: "Orange", color: "#f7941d", textColor: "#1c1405" },
-    { id: "circuito-amarelo", label: "Jaune", color: "#ffd400", textColor: "#1c1405" },
-    { id: "circuito-verde", label: "Vert", color: "#8dc63f", textColor: "#0f1609" },
-    { id: "circuito-azul", label: "Bleu", color: "#1b75bb", textColor: "#f9fbfe" },
-    { id: "circuito-vermelho", label: "Rouge", color: "#ed1c24", textColor: "#fff5f5" },
+    { id: "circuito-laranja", slug: "laranja", label: "Orange", color: "#f7941d", textColor: "#1c1405" },
+    { id: "circuito-amarelo", slug: "amarelo", label: "Jaune", color: "#ffd400", textColor: "#1c1405" },
+    { id: "circuito-verde", slug: "verde", label: "Vert", color: "#8dc63f", textColor: "#0f1609" },
+    { id: "circuito-azul", slug: "azul", label: "Bleu", color: "#1b75bb", textColor: "#f9fbfe" },
+    { id: "circuito-vermelho", slug: "vermelho", label: "Rouge", color: "#ed1c24", textColor: "#fff5f5" },
   ],
 };
 
@@ -177,7 +180,7 @@ const translations: Record<LanguageKey, LanguageContent> = {
     },
     about: {
       badge: "Sobre o Parque",
-      title: "Um refúgio de aventura em plena natureza da Caparica.",
+      title: "Natureza FunParque.",
       paragraphs: [
         "O Fun Parque é um parque de aventura situado no concelho de Almada, destinado a proporcionar aos habitantes da zona metropolitana de Lisboa atividades desportivas ligadas à natureza.",
         "Situado numa propriedade privada com cerca de 8 hectares de mata e a poucos minutos das praias da Costa da Caparica, o Fun Parque ocupa um pulmão verde junto ao mar. As famílias e grupos desfrutam de um ambiente protegido, com estacionamento amplo e fácil acesso.",
@@ -342,11 +345,13 @@ const translations: Record<LanguageKey, LanguageContent> = {
           season: "Inverno · 1 outubro a 31 março",
           details: "Quarta a domingo · 10h às 18h",
           note: "Reservas obrigatórias para garantir lugar.",
+          hours: { start: "10:00", end: "18:00" },
         },
         {
           season: "Verão · 1 abril a 30 setembro",
           details: "Terça a domingo · 10h às 19h",
           note: "Aberto todos os feriados e férias escolares.",
+          hours: { start: "10:00", end: "19:00" },
         },
       ],
       contactTitle: "Fala diretamente com a equipa FunPark",
@@ -383,11 +388,11 @@ const translations: Record<LanguageKey, LanguageContent> = {
       badge: "Como chegar",
       title: "Estamos a poucos minutos de Lisboa.",
       intro:
-        "O FunPark São João fica em São João da Caparica, com acesso rápido pela A33 ou IC20 e estacionamento gratuito.",
+        "O FunParque São João fica em São João da Caparica, com acesso rápido pela A33 ou IC20 e estacionamento gratuito.",
       options: [
         {
           label: "Carro",
-          description: "Usa a saída Caparica/S. João, segue as indicações FunPark e aproveita o nosso parque de estacionamento.",
+          description: "Usa a saída Caparica/S. João, segue as indicações FunParque e aproveita o nosso parque de estacionamento.",
         },
         {
           label: "Transportes públicos",
@@ -814,11 +819,13 @@ const translations: Record<LanguageKey, LanguageContent> = {
           season: "Winter · 1 October to 31 March",
           details: "Wednesday to Sunday · 10am–6pm",
           note: "Bookings required to secure your slot.",
+          hours: { start: "10:00", end: "18:00" },
         },
         {
           season: "Summer · 1 April to 30 September",
           details: "Tuesday to Sunday · 10am–7pm",
           note: "Open on public holidays and school breaks.",
+          hours: { start: "10:00", end: "19:00" },
         },
       ],
       contactTitle: "Speak directly with the FunPark team",
@@ -1287,11 +1294,13 @@ const translations: Record<LanguageKey, LanguageContent> = {
           season: "Invierno · 1 de octubre al 31 de marzo",
           details: "Miércoles a domingo · 10h a 18h",
           note: "Reserva obligatoria para garantizar plaza.",
+          hours: { start: "10:00", end: "18:00" },
         },
         {
           season: "Verano · 1 de abril al 30 de septiembre",
           details: "Martes a domingo · 10h a 19h",
           note: "Abierto en festivos y vacaciones escolares.",
+          hours: { start: "10:00", end: "19:00" },
         },
       ],
       contactTitle: "Habla directamente con el equipo FunPark",
@@ -1760,11 +1769,13 @@ const translations: Record<LanguageKey, LanguageContent> = {
           season: "Hiver · 1er octobre au 31 mars",
           details: "Du mercredi au dimanche · 10h à 18h",
           note: "Réservation obligatoire pour garantir votre créneau.",
+          hours: { start: "10:00", end: "18:00" },
         },
         {
           season: "Été · 1er avril au 30 septembre",
           details: "Du mardi au dimanche · 10h à 19h",
           note: "Ouvert les jours fériés et pendant les vacances scolaires.",
+          hours: { start: "10:00", end: "19:00" },
         },
       ],
       contactTitle: "Contactez directement l'équipe FunPark",
@@ -1998,11 +2009,22 @@ const Index = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.hash) {
-      const target = document.querySelector(location.hash);
+    if (!location.hash) {
+      return;
+    }
+
+    const hash = location.hash.replace(/^#/, "");
+    if (!hash) {
+      return;
+    }
+
+    try {
+      const target = document.getElementById(hash);
       if (target) {
         target.scrollIntoView({ behavior: "smooth", block: "start" });
       }
+    } catch (error) {
+      console.warn("Failed to scroll to hash", location.hash, error);
     }
   }, [location.hash]);
   const content = translations[language];
@@ -2030,7 +2052,7 @@ const Index = () => {
       ? {
           "#circuitos": circuits.map((circuit) => ({
             label: circuit.label,
-            href: `#${circuit.id}`,
+            href: `/circuitos/${circuit.slug}`,
             color: circuit.color,
             textColor: circuit.textColor,
           })),
@@ -2141,20 +2163,12 @@ const Index = () => {
     .toString()
     .padStart(2, "0")}`;
 
-  const scheduleToday = schedule.items.find((item) => {
-    if (!item.details.includes("·")) return false;
-    const [, hours] = item.details.split("·");
-    return !!hours;
-  });
+  const scheduleToday = schedule.items.find((item) => item.hours);
 
   const isOpen = (() => {
-    if (!scheduleToday) return false;
-    const [start, end] = scheduleToday.details
-      .split("·")[1]
-      .split("às")
-      .map((part) => part.trim());
-    const startDate = parse(start, "HH'h'", today);
-    const endDate = parse(end, "HH'h'", today);
+    if (!scheduleToday?.hours) return false;
+    const startDate = parse(scheduleToday.hours.start, "HH:mm", today);
+    const endDate = parse(scheduleToday.hours.end, "HH:mm", today);
     return isWithinInterval(parse(currentTime, "HH:mm", today), {
       start: startDate,
       end: endDate,
@@ -2452,8 +2466,8 @@ const Index = () => {
           id="circuitos"
           className="rounded-[3rem] border border-border bg-card p-10 shadow-[0_35px_100px_-70px_rgba(45,30,15,0.5)] lg:p-14"
         >
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="max-w-xl space-y-4">
+          <div className="flex flex-col items-center gap-6 text-center">
+            <div className="max-w-2xl space-y-4">
               <p className="text-xs uppercase tracking-[0.45em] text-primary">
                 {circuitsCopy.badge}
               </p>
@@ -2468,14 +2482,19 @@ const Index = () => {
           <div className="relative mt-10 flex flex-col items-center gap-4">
             <div className="absolute left-1/2 top-0 bottom-0 w-[6px] -translate-x-1/2 rounded-full bg-gradient-to-b from-[#5b451f] via-[#7b5a2c] to-[#5b451f]" aria-hidden />
             {circuits.map((circuit) => (
-              <div key={circuit.id} id={circuit.id} className="relative z-10 w-full max-w-xs">
-                <div
-                  className="rounded-full py-3 text-center text-sm font-semibold uppercase tracking-[0.45em] shadow-[0_25px_45px_-25px_rgba(0,0,0,0.45)]"
+              <Link
+                key={circuit.id}
+                id={circuit.id}
+                to={`/circuitos/${circuit.slug}`}
+                className="relative z-10 w-full max-w-xs transition hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <span
+                  className="block rounded-full py-3 text-center text-sm font-semibold uppercase tracking-[0.45em] shadow-[0_25px_45px_-25px_rgba(0,0,0,0.45)] transition"
                   style={{ backgroundColor: circuit.color, color: circuit.textColor }}
                 >
                   {circuit.label}
-                </div>
-              </div>
+                </span>
+              </Link>
             ))}
           </div>
         </section>
@@ -2484,17 +2503,15 @@ const Index = () => {
           id="experiencia"
           className="rounded-[3rem] border border-border bg-card p-10 shadow-[0_40px_100px_-70px_rgba(45,30,15,0.5)] lg:p-14"
         >
-          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-            <div>
-                <p className="text-xs uppercase tracking-[0.45em] text-primary">
-                  {experience.badge}
-              </p>
-                <h2 className="mt-2 text-3xl font-semibold sm:text-4xl">
-                  {experience.title}
-              </h2>
-            </div>
-              <p className="max-w-xl text-sm text-muted-foreground">
-                {experience.description}
+          <div className="flex flex-col items-center gap-4 text-center md:gap-5">
+            <p className="text-xs uppercase tracking-[0.45em] text-primary">
+              {experience.badge}
+            </p>
+            <h2 className="text-3xl font-semibold sm:text-4xl">
+              {experience.title}
+            </h2>
+            <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
+              {experience.description}
             </p>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-4">
@@ -2652,37 +2669,37 @@ const Index = () => {
           id="como-chegar"
           className="rounded-[3rem] border border-border bg-card p-10 shadow-[0_35px_100px_-70px_rgba(45,30,15,0.5)] lg:p-14"
         >
-          <div className="space-y-6">
+          <div className="flex flex-col items-center gap-4 text-center">
             <p className="text-xs uppercase tracking-[0.45em] text-primary">
               {content.directions.badge}
             </p>
             <h2 className="text-3xl font-semibold sm:text-4xl">
               {content.directions.title}
-          </h2>
-            <p className="text-sm text-muted-foreground sm:text-base">
+            </h2>
+            <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
               {content.directions.intro}
             </p>
-            <ul className="grid gap-4 md:grid-cols-3">
-              {content.directions.options.map((option) => (
-                <li
-                  key={option.label}
-                  className="rounded-2xl border border-primary/30 bg-secondary/80 p-5 text-sm text-secondary-foreground shadow-[0_20px_60px_-50px_rgba(45,30,15,0.4)]"
-                >
-                  <h3 className="text-base font-semibold text-primary">{option.label}</h3>
-                  <p className="mt-2 text-sm text-secondary-foreground/80">{option.description}</p>
-                </li>
-              ))}
-            </ul>
-            <a
-              href="https://maps.google.com/?q=Fun+Parque+S%C3%A3o+Jo%C3%A3o"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_20px_60px_-50px_rgba(45,30,15,0.4)] transition hover:bg-primary/90"
-            >
-              {content.directions.mapCta}
-            </a>
-        </div>
-      </section>
+          </div>
+          <ul className="mt-8 grid gap-4 md:grid-cols-3">
+            {content.directions.options.map((option) => (
+              <li
+                key={option.label}
+                className="rounded-2xl border border-primary/30 bg-secondary/80 p-5 text-sm text-secondary-foreground shadow-[0_20px_60px_-50px_rgba(45,30,15,0.4)]"
+              >
+                <h3 className="text-base font-semibold text-primary">{option.label}</h3>
+                <p className="mt-2 text-sm text-secondary-foreground/80">{option.description}</p>
+              </li>
+            ))}
+          </ul>
+          <a
+            href="https://maps.google.com/?q=Fun+Parque+S%C3%A3o+Jo%C3%A3o"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-8 inline-flex w-full items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_20px_60px_-50px_rgba(45,30,15,0.4)] transition hover:bg-primary/90"
+          >
+            {content.directions.mapCta}
+          </a>
+        </section>
 
         <section
           id="reservas"

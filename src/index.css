@@ -38,9 +38,6 @@ All colors MUST be HSL.
 
     --radius: 1rem;
 
-    --gradient-primary: linear-gradient(180deg, hsl(56, 100%, 8%), hsl(56, 100%, 8%));
-    --gradient-bg: linear-gradient(180deg, hsl(56, 100%, 8%), hsl(56, 100%, 8%));
-
     --sidebar-background: 56 100% 8%;
     --sidebar-foreground: 46 45% 91%;
     --sidebar-primary: 84 62% 54%;
@@ -49,7 +46,9 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 34 60% 12%;
     --sidebar-border: 32 35% 23%;
     --sidebar-ring: 84 62% 54%;
-    --hero-bg: url("https://images.unsplash.com/photo-1501621667575-af81f1f0bacc?auto=format&fit=crop&w=1920&q=80");
+    --hero-bg: url("https://www.visitportugal.com/sites/www.visitportugal.com/files/styles/encontre_destinos_destaque_galeria/public/mediateca/Fun_Parque.jpg?itok=mdMyx38p");
+    --gradient-primary: linear-gradient(180deg, hsla(56, 100%, 8%, 0.55), hsla(56, 100%, 8%, 0.35));
+    --gradient-bg: linear-gradient(180deg, hsla(56, 100%, 8%, 0.55), hsla(56, 100%, 8%, 0.35));
   }
 
   .dark {

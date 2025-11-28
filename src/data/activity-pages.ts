@@ -26,10 +26,10 @@ export const activityPagesContent: Record<LanguageKey, ActivityDetailContent[]> 
       slug: "arborismo",
       hero: {
         badge: "Atividades",
-        title: "Arborismo · Circuitos nas Copas das Árvores",
+        title: "Arborismo",
         subtitle:
           "Pontes suspensas, redes, tarzan swings e um slide final com vista para a mata. Uma aventura desenhada para famílias, escolas e grupos que querem sentir a natureza de perto.",
-        image: `${baseMediaUrl}/image2.png`,
+        image: `${baseMediaUrl}/imagens/arborismo_crianca.jpg`,
       },
       intro: {
         paragraphs: [
@@ -395,7 +395,7 @@ export const activityPagesContent: Record<LanguageKey, ActivityDetailContent[]> 
         title: "Tree-top Adventure & Zip-line",
         subtitle:
           "Tackle suspended bridges, nets and panoramic zip-lines among the pine trees of Caparica. A progressive challenge for families, schools and thrill-seeking teams.",
-        image: `${baseMediaUrl}/image2.png`,
+        image: `${baseMediaUrl}/imagens/arborismo_crianca.jpg`,
       },
       intro: {
         paragraphs: [
@@ -762,7 +762,7 @@ export const activityPagesContent: Record<LanguageKey, ActivityDetailContent[]> 
         title: "Arborismo y tirolina",
         subtitle:
           "Supera puentes colgantes, redes y tirolinas panorámicas entre los pinos de Caparica. Una aventura progresiva para familias, escuelas y grupos.",
-        image: `${baseMediaUrl}/image2.png`,
+        image: `${baseMediaUrl}/imagens/arborismo_crianca.jpg`,
       },
       intro: {
         paragraphs: [
@@ -1131,7 +1131,7 @@ export const activityPagesContent: Record<LanguageKey, ActivityDetailContent[]> 
         title: "Parcours dans les arbres & tyrolienne",
         subtitle:
           "Traversez des ponts suspendus, des filets et une tyrolienne panoramique au cœur des pins de Caparica. Une aventure progressive pour familles et groupes.",
-        image: `${baseMediaUrl}/image2.png`,
+        image: `${baseMediaUrl}/imagens/arborismo_crianca.jpg`,
       },
       intro: {
         paragraphs: [

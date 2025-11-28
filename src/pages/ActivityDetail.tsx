@@ -252,18 +252,6 @@ const ActivityDetail = () => {
                     {activityDetail.intro.ctaLabel}
                   </a>
                 )}
-                <a
-                  href={`tel:${contactPhoneCompact}`}
-                  className="inline-flex items-center justify-center rounded-full border border-white/60 px-6 py-3 text-white transition hover:-translate-y-0.5 hover:border-white"
-                >
-                  {ui.phoneLabel}: {contactPhone}
-                </a>
-                <a
-                  href={mailto}
-                  className="inline-flex items-center justify-center rounded-full border border-white/60 px-6 py-3 text-white transition hover:-translate-y-0.5 hover:border-white"
-                >
-                  {ui.emailLabel}: {contactEmail}
-                </a>
               </div>
             </div>
             <div className="relative">

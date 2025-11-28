@@ -18,7 +18,12 @@ export type Activity = {
   details: string[];
 };
 export type GalleryItem = { src: string; alt: string };
-export type ScheduleItem = { season: string; details: string; note: string };
+export type ScheduleItem = {
+  season: string;
+  details: string;
+  note: string;
+  hours?: { start: string; end: string };
+};
 export type ActivityPackage = { title: string; options: string[] };
 export type PricingItem = { label: string; description: string };
 export type DirectionsOption = { label: string; description: string };
